@@ -5,7 +5,7 @@
 {-# LANGUAGE UnboxedTuples #-}
 
 module Data.Maybe.Unpacked.Text.Short
-  ( Maybe(..)
+  ( MaybeShortText(..)
   , just
   , nothing
 
@@ -39,7 +39,7 @@ import qualified Prelude as P
 
 -- | Either a 'ShortText' or nothing. Do not use the
 -- data constructor directly.
-data Maybe = Maybe (# (# #) | ByteArray# #)
+data MaybeShortText = MaybeShortText (# (# #) | ByteArray# #)
 
 unboxShortText :: ShortText -> ByteArray#
 unboxShortText x = case toShortByteString x of SBS y -> y
@@ -47,22 +47,22 @@ unboxShortText x = case toShortByteString x of SBS y -> y
 boxShortText :: ByteArray# -> ShortText
 boxShortText x = fromShortByteStringUnsafe (SBS x)
 
-instance Eq Maybe where
+instance Eq MaybeShortText where
   ma == mb =
     maybe (isNothing mb)
           (\a -> maybe False (\b -> a == b) mb) ma
     
-instance Ord Maybe where
+instance Ord MaybeShortText where
   compare ma mb = maybe LT (\a -> maybe GT (compare a) mb) ma  
 
-instance Show Maybe where
-  showsPrec p (Maybe m) = case m of
+instance Show MaybeShortText where
+  showsPrec p (MaybeShortText m) = case m of
     (# (# #) | #) -> showString "nothing"
     (# | i #) -> showParen (p > 10)
       $ showString "just "
       . showsPrec 11 (boxShortText i)
 
-instance Read Maybe where
+instance Read MaybeShortText where
   readPrec = parens $ nothingP +++ justP
     where
       nothingP = prec 10 $ do
@@ -73,17 +73,17 @@ instance Read Maybe where
         a <- step readPrec
         return (just a)
 
-listToMaybe :: [ShortText] -> Maybe
+listToMaybe :: [ShortText] -> MaybeShortText
 listToMaybe [] = nothing
 listToMaybe (x:_) = just x
 
-maybeToList :: Maybe -> [ShortText]
+maybeToList :: MaybeShortText -> [ShortText]
 maybeToList = maybe [] (: [])
 
-catMaybes :: [Maybe] -> [ShortText]
+catMaybes :: [MaybeShortText] -> [ShortText]
 catMaybes = mapMaybe id
 
-mapMaybe :: (a -> Maybe) -> [a] -> [ShortText]
+mapMaybe :: (a -> MaybeShortText) -> [a] -> [ShortText]
 mapMaybe _ [] = []
 mapMaybe f (a : as) =
   let ws = mapMaybe f as
@@ -97,34 +97,34 @@ mapMaybe f (a : as) =
   #-}
 
 {-# NOINLINE [0] mapMaybeFB #-}
-mapMaybeFB :: (ShortText -> r -> r) -> (a -> Maybe) -> a -> r -> r
+mapMaybeFB :: (ShortText -> r -> r) -> (a -> MaybeShortText) -> a -> r -> r
 mapMaybeFB cons f x next = maybe next (flip cons next) (f x)
 
-isNothing :: Maybe -> Bool
+isNothing :: MaybeShortText -> Bool
 isNothing = maybe True (const False)
 
-isJust :: Maybe -> Bool
+isJust :: MaybeShortText -> Bool
 isJust = maybe False (const True)
 
-nothing :: Maybe
-nothing = Maybe (# (# #) | #)
+nothing :: MaybeShortText
+nothing = MaybeShortText (# (# #) | #)
 
-just :: ShortText -> Maybe
-just x = Maybe (# | unboxShortText x #)
+just :: ShortText -> MaybeShortText
+just x = MaybeShortText (# | unboxShortText x #)
 
-fromMaybe :: ShortText -> Maybe -> ShortText
-fromMaybe a (Maybe m) = case m of
+fromMaybe :: ShortText -> MaybeShortText -> ShortText
+fromMaybe a (MaybeShortText m) = case m of
   (# (# #) | #) -> a
   (# | i #) -> boxShortText i
 
-maybe :: a -> (ShortText -> a) -> Maybe -> a
-maybe a f (Maybe m) = case m of
+maybe :: a -> (ShortText -> a) -> MaybeShortText -> a
+maybe a f (MaybeShortText m) = case m of
   (# (# #) | #) -> a
   (# | i #) -> f (boxShortText i)
 
-toBaseMaybe :: Maybe -> P.Maybe ShortText
+toBaseMaybe :: MaybeShortText -> P.Maybe ShortText
 toBaseMaybe = maybe P.Nothing P.Just
 
-fromBaseMaybe :: P.Maybe ShortText -> Maybe
+fromBaseMaybe :: P.Maybe ShortText -> MaybeShortText
 fromBaseMaybe = P.maybe nothing just
 
