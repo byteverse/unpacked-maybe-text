@@ -38,7 +38,8 @@ import Text.ParserCombinators.ReadPrec (prec, step)
 import qualified Prelude as P
 
 -- | Either a 'ShortText' or nothing. Do not use the
--- data constructor directly.
+-- data constructor directly since it allows you to
+-- circumvent encoding invariants.
 data MaybeShortText = MaybeShortText (# (# #) | ByteArray# #)
 
 unboxShortText :: ShortText -> ByteArray#
