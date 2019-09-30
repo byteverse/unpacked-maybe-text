@@ -1,11 +1,18 @@
 cabal-version: 2.2
 name: unpacked-maybe-text
 version: 0.1.0.0
-synopsis: maybes of numeric values with fewer indirections
+synopsis: optional text that unpacks well
 description:
-  This library provides specialization of `Maybe ShortText`. When used
-  in a data constructor, this can lead to less boxing.
-homepage: https://github.com/andrewthad/unpacked-maybe-text#readme
+  This library provides a specialization of `Maybe ShortText`.
+  When this is an unpacked field of data constructor, this will
+  result in fewer indirections and fewer allocations. This is
+  a micro-optimization, so think hard about whether or not this
+  will improve performance in a particular situation. A different
+  way to accomplish a similar goal is to forbid empty text and then
+  use the empty text value as a placeholder that signifies `Nothing`.
+  This alternative may or may not be an option depending on whether
+  or not the empty string is valid in your problem domain.
+homepage: https://github.com/andrewthad/unpacked-maybe-text
 bug-reports: https://github.com/andrewthad/unpacked-maybe-text/issues
 author: Andrew Martin
 maintainer: andrew.thaddeus@gmail.com
