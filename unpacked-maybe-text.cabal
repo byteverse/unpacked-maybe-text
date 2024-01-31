@@ -1,7 +1,7 @@
-cabal-version: 2.2
-name:          unpacked-maybe-text
-version:       0.1.0.1
-synopsis:      optional text that unpacks well
+cabal-version:   2.2
+name:            unpacked-maybe-text
+version:         0.1.0.1
+synopsis:        optional text that unpacks well
 description:
   This library provides a specialization of `Maybe ShortText`.
   When this is an unpacked field of data constructor, this will
@@ -13,15 +13,16 @@ description:
   This alternative may or may not be an option depending on whether
   or not the empty string is valid in your problem domain.
 
-homepage:      https://github.com/byteverse/unpacked-maybe-text
-bug-reports:   https://github.com/byteverse/unpacked-maybe-text/issues
-author:        Andrew Martin
-maintainer:    amartin@layer3com.com
-category:      Data
-copyright:     2019 Andrew Martin
-license:       BSD-3-Clause
-license-file:  LICENSE
-build-type:    Simple
+homepage:        https://github.com/byteverse/unpacked-maybe-text
+bug-reports:     https://github.com/byteverse/unpacked-maybe-text/issues
+author:          Andrew Martin
+maintainer:      amartin@layer3com.com
+category:        Data
+copyright:       2019 Andrew Martin
+license:         BSD-3-Clause
+license-file:    LICENSE
+build-type:      Simple
+extra-doc-files: CHANGELOG.md
 
 library
   exposed-modules:  Data.Maybe.Unpacked.Text.Short
