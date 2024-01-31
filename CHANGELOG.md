@@ -1,4 +1,4 @@
-# Revision history for byte-containers
+# Revision history for unpacked-maybe-text
 
 ## 0.1.0.1 -- 2024-01-31
 
